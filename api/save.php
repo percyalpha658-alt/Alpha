@@ -1,45 +1,58 @@
 <?php
 
-include("../db.php");
+// Récupération des données envoyées par ESP32
 
-// Récupération des données
-$temp   = $_GET['temp'] ?? 0;
-$hum    = $_GET['hum'] ?? 0;
-$sol    = $_GET['sol'] ?? 0;
-$pompe  = $_GET['pompe'] ?? 0;
-$lcd    = $_GET['lcd'] ?? 0;
+$temp  = $_GET['temp'] ?? 0;
+$hum   = $_GET['hum'] ?? 0;
+$sol   = $_GET['sol'] ?? 0;
+$pompe = $_GET['pompe'] ?? 0;
+$date  = $_GET['date'] ?? "inconnue";
+$heure = $_GET['heure'] ?? "inconnue";
 
-// Enregistrement dans la base
-$sql = "INSERT INTO data
-(temperature_air, humidite_air, humidite_sol, pompe, lcd)
-VALUES
-('$temp','$hum','$sol','$pompe','$lcd')";
 
-if(mysqli_query($conn,$sql)){
-    echo "Données enregistrées avec succès.<br>";
-}else{
-    echo "Erreur : ".mysqli_error($conn);
-}
+// Alerte si humidité du sol < 60%
 
-// Alerte WhatsApp si le sol est sec
 if($sol < 60){
 
-    $message  = "⚠️ Smart Agriculture\n";
-    $message .= "Humidité du sol : ".$sol."%\n";
-    $message .= "Humidité de l'air : ".$hum."%\n";
-    $message .= "Température : ".$temp."°C\n";
-    $message .= "Pompe : ".$pompe;
+    $message = "⚠️ IRRIGATION AUTOMATIQUE \n\n";
+    $message .= "🌱 Humidité sol : ".$sol."%\n";
+    $message .= "💧 Humidité air : ".$hum."%\n";
+    $message .= "🌡️ Température : ".$temp."°C\n\n";
+
+    if($pompe == 1){
+        $message .= "🚰 Pompe : ON\n";
+    }else{
+        $message .= "🚰 Pompe : OFF\n";
+    }
+
+    $message .= "📅 Date : ".$date."\n";
+    $message .= "⏰ Heure : ".$heure;
+
+
+    // CallMeBot
 
     $phone = "243833374742";
     $apikey = "3019872";
 
-    $url = "https://api.callmebot.com/whatsapp.php?phone=".$phone.
-           "&text=".urlencode($message).
-           "&apikey=".$apikey;
+
+    $url = "https://api.callmebot.com/whatsapp.php?phone="
+    .$phone.
+    "&text=".urlencode($message).
+    "&apikey=".$apikey;
+
 
     file_get_contents($url);
 }
 
-mysqli_close($conn);
+
+// Réponse serveur
+
+echo "OK\n";
+echo "Temperature : ".$temp." C\n";
+echo "Humidite air : ".$hum." %\n";
+echo "Humidite sol : ".$sol." %\n";
+echo "Pompe : ".$pompe."\n";
+echo "Date : ".$date."\n";
+echo "Heure : ".$heure;
 
 ?>
