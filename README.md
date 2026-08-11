@@ -27,12 +27,14 @@ Le projet combine le **génie électrique, l'automatique, l'électronique, les s
 
 ## 🛠️ Technologies utilisées
 
-- **ESP32**
-- **PHP**
-- **MySQL**
+- **PHP 8.2**
+- **Apache**
+- **MySQL / MariaDB**
+- **PHP MySQLi**
 - **HTML / CSS / JavaScript**
+- **ESP32**
+- **Wi-Fi / HTTP**
 - **API**
-- **Wi-Fi**
 - **Docker**
 - **IoT**
 - **Systèmes embarqués**
@@ -48,13 +50,13 @@ Alpha/
 │   └── API du système
 │
 ├── Dockerfile
-│   └── Configuration Docker
+│   └── Configuration Docker avec PHP 8.2 et Apache
 │
 ├── db.php
-│   └── Connexion à la base de données
+│   └── Connexion à la base de données MySQL
 │
 ├── index.php
-│   └── Interface principale
+│   └── Interface principale de l'application
 │
 └── README.md
     └── Documentation du projet
